@@ -5,12 +5,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pickle
 import os
 
-# Paths
-DATA_PATH = os.path.join("backend", "data", "jobs_with_titles.json")
-INDEX_PATH = os.path.join("backend", "index", "pynnd_index.pkl")
-
 print("Loading job data...")
-JOBS = json.load(open(DATA_PATH, "r", encoding="utf-8"))
+JOBS = json.load(open("data/jobs_with_titles.json", "r", encoding="utf-8"))
 
 print("Sample loaded title:", JOBS[0].get("jobtitle_final", ""))
 
@@ -18,7 +14,7 @@ print("Loading embedding model...")
 EMB_MODEL = SentenceTransformer("all-MiniLM-L6-v2")
 
 print("Loading ANN index (PyNNDescent)...")
-with open(INDEX_PATH, "rb") as f:
+with open("data/pynnd_index.pkl", "rb") as f:
     INDEX = pickle.load(f)
 
 TOP_K = 30  # number of recommended jobs

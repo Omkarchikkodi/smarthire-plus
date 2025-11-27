@@ -1,7 +1,7 @@
 from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from backend.resume_parser import parse_resume
-from backend.recommender_sbert import recommend_jobs_sbert
+from resume_parser import parse_resume
+from recommender_sbert import recommend_jobs_sbert
 
 app = FastAPI()
 

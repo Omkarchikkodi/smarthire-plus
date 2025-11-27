@@ -4,8 +4,7 @@ import json
 import re
 import os
 
-SKILLS_PATH = os.path.join("backend", "skills_dict.json")
-skills_list = json.load(open(SKILLS_PATH, "r"))
+skills_list = json.load(open("skills_dict.json", "r"))
 
 def parse_resume(data):
     text = ""
