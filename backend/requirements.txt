@@ -9,3 +9,4 @@ scikit-learn
 umap-learn
 pynndescent
 lightgbm
+gdown
