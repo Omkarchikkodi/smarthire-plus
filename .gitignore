@@ -8,10 +8,11 @@ node_modules/
 dist/
 build/
 
-# Hugedata (DON'T PUSH THESE)
-ml/
+# Hugedata - DO NOT PUSH
 backend/data/
 backend/models/
+ml/
+
 *.pkl
 *.csv
 *.json
@@ -20,5 +21,5 @@ backend/models/
 .DS_Store
 Thumbs.db
 
-# Environment
+# Env
 .env
