@@ -8,14 +8,20 @@ node_modules/
 dist/
 build/
 
-# Hugedata - DO NOT PUSH
-backend/data/
-backend/models/
-ml/
-
+# Hugedata (DON'T PUSH THESE)
+ml/**
+backend/data/** 
+!backend/data/skills_dict.json
+backend/models/**
 *.pkl
 *.csv
 *.json
+!backend/skills_dict.json
+
+# Allow important scripts
+!download_ml_files.py
+!start.sh
+
 
 # OS junk
 .DS_Store
