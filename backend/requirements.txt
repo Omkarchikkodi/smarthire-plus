@@ -4,8 +4,14 @@ python-multipart
 pdfplumber
 numpy
 pandas
-sentence-transformers
 scikit-learn
+umap-learn
 pynndescent
 lightgbm
 gdown
+
+# CPU-only PyTorch (NO CUDA)
+torch==2.1.2 --index-url https://download.pytorch.org/whl/cpu
+
+# Sentence Transformers (CPU only)
+sentence-transformers==2.2.2
