@@ -1,47 +1,58 @@
 import json
 import numpy as np
 from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
 import pickle
-import os
 
-BASE_DIR = os.path.dirname(__file__)
-DATA_DIR = os.path.join(BASE_DIR, "data")
+TOP_K = 30  # nearest jobs
 
-JOBS = json.load(open(os.path.join(DATA_DIR, "jobs_with_titles.json"), "r", encoding="utf-8"))
+print("Loading job metadata...")
+with open("backend/data/jobs_meta.json", "r", encoding="utf-8") as f:
+    JOBS = json.load(f)
+print("Loaded", len(JOBS), "jobs")
 
+print("Loading SBERT model...")
 EMB_MODEL = SentenceTransformer("all-MiniLM-L6-v2")
 
-with open(os.path.join(DATA_DIR, "pynnd_index.pkl"), "rb") as f:
+print("Loading ANN index (PyNNDescent)...")
+with open("backend/data/pynnd_index.pkl", "rb") as f:
     INDEX = pickle.load(f)
 
-TOP_K = 30
-
 def recommend_jobs_sbert(resume_text, resume_skills):
-    r_emb = EMB_MODEL.encode(resume_text).astype("float32")
+    # 1. Encode resume
+    r_emb = EMB_MODEL.encode(resume_text).astype("float32").reshape(1, -1)
 
-    indices, distances = INDEX.query(r_emb.reshape(1, -1), k=TOP_K)
+    # 2. Query ANN index
+    indices, distances = INDEX.query(r_emb, k=TOP_K)
     indices = indices[0]
+    distances = distances[0]
 
     results = []
     rskills = set(resume_skills)
 
-    for idx in indices:
+    for idx, dist in zip(indices, distances):
         job = JOBS[idx]
 
-        job_emb = np.array(job["embedding"]).reshape(1, -1)
-        cos_sim = float(cosine_similarity(r_emb.reshape(1, -1), job_emb)[0][0])
-
+        # NNDescent with metric='cosine' => distance ≈ 1 - cosine_sim
+        cos_sim = 1.0 - float(dist)
         jskills = job.get("skills_clean", [])
         overlap = len(rskills & set(jskills))
 
+        title = (
+            job.get("jobtitle_final")
+            or job.get("jobtitle")
+            or "Unknown Role"
+        )
+
         results.append({
-            "title": job.get("jobtitle_final") or job.get("jobtitle"),
+            "jobid": job["jobid"],
+            "title": title,
             "match_score": round(cos_sim * 100, 2),
+            "industry": job.get("industry", ""),
+            "location": job.get("joblocation_address", ""),
             "skills_required": jskills,
             "skill_overlap": overlap,
-            "industry": job.get("industry", ""),
-            "location": job.get("joblocation_address", "")
         })
 
-    return sorted(results, key=lambda x: x["match_score"], reverse=True)
+    # sort best first
+    results.sort(key=lambda x: x["match_score"], reverse=True)
+    return results
