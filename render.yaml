@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: smarthire-plus-backend
+    env: python
+    rootDir: ./backend
+    buildCommand: pip install -r ../backend/requirements.txt
+    startCommand: bash ../start.sh
+    plan: free
+    region: oregon
+
+    envVars:
+      - key: PORT
+        value: 8000
+
+  - type: web
+    name: smarthire-plus-frontend
+    env: node
+    rootDir: ./frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm run preview -- --port 3000
+    plan: free
+    region: oregon
