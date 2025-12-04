@@ -1,17 +1,23 @@
-fastapi
-uvicorn
-python-multipart
-pdfplumber
-numpy
-pandas
-scikit-learn
-umap-learn
-pynndescent
-lightgbm
-gdown
+fastapi==0.115.2
+uvicorn==0.30.1
+python-multipart==0.0.9
+pdfplumber==0.11.0
 
-# CPU-only PyTorch (NO CUDA)
-torch==2.1.2 --index-url https://download.pytorch.org/whl/cpu
+# Numerical stack (must stay NumPy 1.x)
+numpy==1.26.4
+pandas==2.1.4
+scikit-learn==1.3.2
+scipy==1.11.4
 
-# Sentence Transformers (CPU only)
+# ANN + ML
+lightgbm==3.3.5
+joblib==1.3.2
+
+# CPU-only PyTorch (no CUDA)
+torch==2.1.2 --extra-index-url https://download.pytorch.org/whl/cpu
+
+# Sentence Transformers (compatible with Torch 2.1.2)
 sentence-transformers==2.2.2
+
+# Google Drive downloader
+gdown==5.1.0
